@@ -21,7 +21,7 @@ class Auction(models.Model):
     initialprice = models.DecimalField(max_digits=19, decimal_places=10)
     comments = models.ForeignKey(Comment, null=True, blank=True, on_delete=models.CASCADE, related_name="related_comments")
     bids = models.ForeignKey(Bid, null=True, blank=True, on_delete=models.CASCADE, related_name="offers")
-    image = models.ImageField(upload_to='auctions/img/', null=True, blank=True)
+    image = models.ImageField(upload_to='img/%Y/%m/%D', null=True, blank=True)
 
 class Category(models.Model):
     label = models.CharField(max_length = 255)

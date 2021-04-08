@@ -1,0 +1,17 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<form method="post" action=" {% url 'index' %}">
+    {% csrf_token %}
+    {{ formset }}
+    <input type="submit" name="submit">
+</form>
+
+{% for form in formset %}
+
+    <div>{{ form.as_p }}</div><br><br>
+
+{% endfor %}
+
+{% endblock %}

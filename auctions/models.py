@@ -20,17 +20,18 @@ class Bid(models.Model):
     bid_auction = models.ForeignKey(Auction_listing, on_delete=models.CASCADE, related_name="bids")
     orderer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orderers")
     def __str__(self):
-        return f"{self.value}"
+        return f"{self.orderer} gave : {self.value} for : {self.bid_auction}"
 
 class Comment(models.Model):
     content = models.CharField(max_length = 555)
     auction_commented = models.ForeignKey(Auction_listing, on_delete=models.CASCADE, related_name="auctions")
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="commenter")
     def __str__(self):
-        return f"{self.value}"
+        return f"{self.auction_commented} : {self.content} by {self.author}"
 
 class Category(models.Model):
     name = models.CharField(max_length = 64)
     auction_categories = models.ManyToManyField(Auction_listing, blank=True, related_name="categories")
-    
+    def __str__(self):
+        return f"Category : {self.name}"
 

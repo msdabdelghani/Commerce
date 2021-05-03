@@ -1,39 +1,36 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.forms import ModelForm
+import datetime
 
+
+class User(AbstractUser):
+    pass
+
+class Auction_listing(models.Model):
+    name = models.CharField(max_length=64)
+    price = models.DecimalField(max_digits=19, decimal_places=2)
+    description = models.CharField(max_length=255)
+    date = models.DateField(default=datetime.date.today)
+    image =  models.ImageField(blank = True)
+    def __str__(self):
+        return f"{self.name} ({self.description})"
+
+class Bid(models.Model):
+    value = models.DecimalField(max_digits=19, decimal_places=2)
+    bid_auction = models.ForeignKey(Auction_listing, on_delete=models.CASCADE, related_name="bids")
+    orderer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orderers")
+    def __str__(self):
+        return f"{self.value}"
 
 class Comment(models.Model):
     content = models.CharField(max_length = 555)
-
-class Bid(models.Model):
-    price =  models.DecimalField(max_digits=19, decimal_places=10)
-    STATUS = (
-        ('Y', 'Your bid is the current bid'),
-        ('N', ''),
-    )
-
-    status = models.CharField(max_length=1, choices=STATUS)
-
-class Auction(models.Model):
-    title = models.CharField(max_length = 255)
-    subtitle = models.CharField(max_length = 555)
-    initialprice = models.DecimalField(max_digits=19, decimal_places=10)
-    comments = models.ForeignKey(Comment, null=True, blank=True, on_delete=models.CASCADE, related_name="related_comments")
-    bids = models.ForeignKey(Bid, null=True, blank=True, on_delete=models.CASCADE, related_name="offers")
-    image = models.ImageField(upload_to='img/%Y/%m/%D', null=True, blank=True)
+    auction_commented = models.ForeignKey(Auction_listing, on_delete=models.CASCADE, related_name="auctions")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="commenter")
+    def __str__(self):
+        return f"{self.value}"
 
 class Category(models.Model):
-    label = models.CharField(max_length = 255)
-    auctions = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name="auction_listing")
+    name = models.CharField(max_length = 64)
+    auction_categories = models.ManyToManyField(Auction_listing, blank=True, related_name="categories")
+    
 
-class User(AbstractUser):
-    user_bids = models.ForeignKey(Bid, null=True, blank=True, on_delete=models.CASCADE, related_name="user_bids")
-    user_auctions = models.ForeignKey(Auction, null=True, blank=True, on_delete=models.CASCADE, related_name="user_auctions")
-    user_comments = models.ForeignKey(Comment,null=True, blank=True, on_delete=models.CASCADE, related_name="user_comments")
-    pass
- 
-class AuctionForm(ModelForm):
-    class Meta:
-        model = Auction
-        fields = ['title', 'subtitle', 'initialprice', 'image']

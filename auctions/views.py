@@ -5,31 +5,10 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from .models import User
-from django.forms import modelformset_factory
-from .models import Auction
 
-def add_auction(request):
-    AuctionFormSet = modelformset_factory(Auction, fields=('title', 'subtitle', 'initialprice', 'image'))
-    if request.method == 'POST':
-        formset = AuctionFormSet(request.POST, request.FILES)
-        if formset.is_valid():
-            formset.save()
-    else:
-        formset = AuctionFormSet()
-    return render(request, 'auctions/auction.html', {'formset': formset})
 
 def index(request):
     return render(request, "auctions/index.html")
-
-'''
-def create(request, listing_id):
-    if request.method == "POST":
-        listing = Auction.objects.get(pk = listing_id)
-        
-    return HttpResponseRedirect(reverse("index", args=(listing_id,)))
-'''
-
-
 
 
 def login_view(request):

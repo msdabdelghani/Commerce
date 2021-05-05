@@ -4,11 +4,23 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from django import forms
+from django.forms import BaseModelFormSet
+
+from .models import User, Auction_listing, Bid, Comment, Category
+
+class NewAuctionForm(forms.Form):
+    title = forms.CharField(label="New Title")
+    description = forms.CharField(label="New Description", widget=forms.Textarea)
+    startingBid = forms.DecimalField(label="Starting Bid", max_digits=19, decimal_places=2)
+    image = forms.CharField(label="Image", required=False)
+    name = forms.CharField(label="Category's name", required=False)
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    return render(request, "auctions/index.html", {
+        "auctions": Auction_listing.objects.all()
+    })
 
 
 def login_view(request):
@@ -22,7 +34,7 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("auctions:index"))
         else:
             return render(request, "auctions/login.html", {
                 "message": "Invalid username and/or password."
@@ -33,7 +45,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("auctions:index"))
 
 
 def register(request):
@@ -58,6 +70,29 @@ def register(request):
                 "message": "Username already taken."
             })
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("auctions:index"))
     else:
         return render(request, "auctions/register.html")
+
+def add(request):   
+    if request.method == "POST":
+        a1 = Auction_listing()
+        c1 = Category()
+        formset = NewCategoryForm(request.POST)
+        form = NewAuctionForm(request.POST)
+        if form.is_valid() and formset.is_valid():
+            a1.name = form.cleaned_data["title"]
+            a1.description = form.cleaned_data["description"]
+            a1.price = form.cleaned_data["startingBid"]
+            a1.image = form.cleaned_data["image"]
+            a1.save()
+
+            return HttpResponseRedirect(reverse("auctions:index"))
+        else:
+            return render(request, "auctions/add.html", {
+                "form": form
+            })
+    
+    return render(request, "auctions/add.html", {
+            "form": NewAuctionForm()
+        })

@@ -1,7 +1,24 @@
 {% extends "auctions/layout.html" %}
-
+{% load static %}
 {% block body %}
     <h2>Active Listings</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for auction in auctions %}
+      <div class="col">
+        <div class="card">
+          <img src="{{ auction.image }}" class="card-img-top" alt="Auction Image">
+          <div class="card-body">
+            <h3 class="card-title">{{ auction.name }}</h3>
+            <p class="card-text">{{ auction.description }}</p>
+            <hr>
+            <h5 class="card-title">Details</h5>
+            <p class="card-text"><b>Initial Price : </b> {{ auction.price }}</p>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+          <p>No Active Listings</p>
+      {% endfor %}
+    </div>
 
-    TODO
 {% endblock %}

@@ -13,6 +13,11 @@
             <hr>
             <h5 class="card-title">Details</h5>
             <p class="card-text"><b>Initial Price : </b> {{ auction.price }}</p>
+            {% for category in auction.categories.all %}
+              <p class="card-text"><b>Category : </b> {{ category.name }}</p>
+              {% empty %}
+                No Actual Categories!
+            {% endfor %}
           </div>
         </div>
       </div>

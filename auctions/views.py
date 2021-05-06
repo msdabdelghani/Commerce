@@ -14,8 +14,7 @@ class NewAuctionForm(forms.Form):
     description = forms.CharField(label="New Description", widget=forms.Textarea)
     startingBid = forms.DecimalField(label="Starting Bid", max_digits=19, decimal_places=2)
     image = forms.CharField(label="Image", required=False)
-    name = forms.CharField(label="Category's name", required=False)
-
+    categories = forms.CharField(label="Category", required=False)
 
 def index(request):
     return render(request, "auctions/index.html", {
@@ -78,14 +77,16 @@ def add(request):
     if request.method == "POST":
         a1 = Auction_listing()
         c1 = Category()
-        formset = NewCategoryForm(request.POST)
         form = NewAuctionForm(request.POST)
-        if form.is_valid() and formset.is_valid():
+        if form.is_valid():
             a1.name = form.cleaned_data["title"]
             a1.description = form.cleaned_data["description"]
             a1.price = form.cleaned_data["startingBid"]
             a1.image = form.cleaned_data["image"]
             a1.save()
+            c1.name = form.cleaned_data["categories"]
+            c1.save()
+            a1.categories.add(c1)
 
             return HttpResponseRedirect(reverse("auctions:index"))
         else:

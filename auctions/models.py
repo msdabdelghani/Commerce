@@ -7,7 +7,6 @@ class User(AbstractUser):
 
 class Category(models.Model):
     name = models.CharField(max_length = 64)
-    
     def __str__(self):
         return f"Category : {self.name}"
 
@@ -18,7 +17,7 @@ class Auction_listing(models.Model):
     description = models.CharField(max_length=255)
     date = models.DateField(default=datetime.date.today)
     image =  models.CharField(max_length = 555, blank = True)
-
+    categories = models.ManyToManyField(Category, blank=True, related_name="auction_categories")
     def __str__(self):
         return f"{self.name} ({self.description})"
 

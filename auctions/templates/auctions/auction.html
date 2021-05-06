@@ -1,0 +1,20 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h1>Auction Details</h1>
+        <div class="card m-5" style="width: 23rem;">
+            <img src="{{ auction.image }}" class="card-img-top m-6" alt="Auction Image">
+            <div class="card-body">
+            <h3 class="card-title">{{ auction.name }}</h3>
+            <p class="card-text">{{ auction.description }}</p>
+            <h5 class="card-title">Details</h5>
+                <p class="card-text"><b>Initial Price : </b> {{ auction.price }}</p>
+                {% for category in auction.categories.all %}
+                <p class="card-text"><b>Category : </b> {{ category.name }}</p>
+                {% empty %}
+                    No Actual Categories!
+                {% endfor %}
+            <p class="card-text"><small class="text-muted">Date Created is : {{auction.date}}</small></p>
+            </div>
+        </div>
+{% endblock %}

@@ -1,3 +1,4 @@
+from auctions.models import Watchlist
 from django.urls import path
 from . import views
 
@@ -12,7 +13,8 @@ urlpatterns = [
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
     path("add", views.add, name="add"),
-    path("<int:auction_id>/auction", views.auction, name="auction")
+    path("<int:auction_id>/auction", views.auction, name="auction"),
+    path("<int:auction_id>/watchlist", views.watchlist, name="watchlist")
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

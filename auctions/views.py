@@ -7,7 +7,7 @@ from django.urls import reverse
 from django import forms
 from django.forms import BaseModelFormSet
 
-from .models import User, Auction_listing, Bid, Comment, Category
+from .models import User, Auction_listing, Bid, Comment, Category, Watchlist
 
 class NewAuctionForm(forms.Form):
     title = forms.CharField(label="New Title")
@@ -103,3 +103,16 @@ def auction(request, auction_id):
     return render(request, "auctions/auction.html", {
         "auction": auction
     })
+
+def watchlist(request, auction_id):
+    
+    if request.user.is_authenticated:
+        watchlist = Watchlist()
+        auction = Auction_listing.objects.get(pk = auction_id)
+        user = request.user
+        watchlist.owner = user
+        watchlist.save()
+        watchlist.items.add(auction)
+        return render(request, "auctions/auction.html", {
+            "auction": auction
+        })

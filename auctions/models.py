@@ -2,6 +2,9 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 import datetime
 
+from django.db.models.fields import BooleanField
+from django.db.models.fields.related import ManyToManyField
+
 class User(AbstractUser):
     pass
 
@@ -35,3 +38,11 @@ class Comment(models.Model):
     def __str__(self):
         return f"{self.auction_commented} : {self.content} by {self.author}"
 
+class Watchlist(models.Model):
+    added = models.BooleanField( default = False )
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owners")
+    items = models.ManyToManyField(Auction_listing, blank=True, related_name="auction_items")
+    
+    def __str__(self):
+        if self.added:
+            return f"The owner of this watchlist is {self.owner}"

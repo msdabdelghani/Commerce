@@ -7,6 +7,7 @@
       <div class="col">
         <div class="card h-100">
           <div class="d-grid gap-2 d-md-flex p-2 justify-content-md-end">
+            <a href="{% url 'auctions:watchlist' auction.id %}" class="btn btn-outline-success mr-2 me-md-2" type="button">Add to Watchlist</a>
             <a href="{% url 'auctions:auction' auction.id %}" class="btn btn-outline-primary me-md-2" type="button">Details</a>
           </div>
           <img src="{{ auction.image }}" class="card-img-top" alt="Auction Image">
